@@ -87,18 +87,18 @@ router.post('/signup', async (req, res) => {
          pass2
       } = req.body;
       if (pass.length < 6 || pass2 < 6) {
-         req.flash('error_msg', 'Password must contain at least 6 characters');
+         req.flash('error_msg', 'A senha deve conter pelo menos 6 caracteres');
          return res.redirect('/users/signup');
       }
       if (pass === pass2) {
          let checking = await checkUsername(username);
          let checkingEmail = await checkEmail(email);
          if (checkingEmail) {
-            req.flash('error_msg', 'A user with the same Email already exists');
+            req.flash('error_msg', 'Já existe um usuário com o mesmo e-mail');
             return res.redirect('/users/signup');
          }
          if (checking) {
-            req.flash('error_msg', 'A user with the same Username already exists');
+            req.flash('error_msg', 'usuário com o mesmo nome de usuário já existe');
             return res.redirect('/users/signup');
          } else {
             let hashedPassword = getHashedPassword(pass);
@@ -112,11 +112,11 @@ router.post('/signup', async (req, res) => {
             const activationToken = createActivationToken(newUser)
             const url = `https://${req.hostname}/users/activation?id=${activationToken}`
             await sendEmail.inboxGmailRegist(email, url);
-            req.flash('success_msg', 'You are now registered, please check your email to verify your account');
+            req.flash('success_msg', 'Agora você está registrado, verifique seu e-mail para verificar sua conta');
             return res.redirect('/users/login');
          }
       } else {
-         req.flash('error_msg', 'Password and Password confirmation are not the same');
+         req.flash('error_msg', 'A senha e a confirmação da senha não são iguais');
          return res.redirect('/users/signup');
       }
    } catch (err) {
@@ -126,7 +126,7 @@ router.post('/signup', async (req, res) => {
 
 router.get('/logout', (req, res) => {
    req.logout();
-   req.flash('success_msg', 'logout success');
+   req.flash('success_msg', 'sucesso de logout');
    res.redirect('/users/login');
 });
 
