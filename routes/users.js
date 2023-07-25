@@ -33,7 +33,7 @@ router.post('/login', async (req, res, next) => {
                   <button type="button" aria-hidden="true" class="close" data-dismiss="alert" aria-label="Close">
                     <i class="tim-icons icon-simple-remove"></i>
                   </button>
-                  <span><b>Username or password not found</span>
+                  <span><b>Nome de usuário ou senha não encontrados</span>
                 </div>`,
    })(req, res, next);
 });
@@ -41,13 +41,13 @@ router.post('/login', async (req, res, next) => {
 router.get('/activation/', async (req, res) => {
    let id = req.query.id;
    if (!id) {
-      req.flash('error_msg', "Invalid activation token")
+      req.flash('error_msg', "Token de ativação inválido")
       res.redirect("/users/register");
    }
 
    await jwt.verify(id, ACTIVATION_TOKEN_SECRET, async (err, user) => {
       if (err) {
-         req.flash('error_msg', "Invalid activation token")
+         req.flash('error_msg', "Token de ativação inválido")
          res.redirect("/users/register");
       } else {
          const {
@@ -59,14 +59,14 @@ router.get('/activation/', async (req, res) => {
          let checking = await checkUsername(username);
          let checkingEmail = await checkEmail(email);
          if (checking) {
-            req.flash('error_msg', "Sorry. A user with that username already exists. Please use another username!")
+            req.flash('error_msg', "Desculpe. Um usuário com esse nome já existe. Use outro nome de usuário!")
             res.redirect("/users/signup");
          } else if (checkingEmail) {
-            req.flash('error_msg', "Sorry. A user with that email address already exists. Please use another email!")
+            req.flash('error_msg', "Desculpe. Já existe um usuário com esse endereço de e-mail. Por favor, use outro e-mail!")
             res.redirect("/users/signup");
          } else {
             addUser(username, email, password, apikey);
-            req.flash('success_msg', "Sign up successful. Please login to use our service.")
+            req.flash('success_msg', "Cadastro bem sucedido. Por favor, faça login para usar nosso serviço.")
             res.redirect("/users/login");
          }
       }
